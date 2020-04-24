@@ -1,17 +1,43 @@
-import React,{useContext} from 'react';
-import {Text,View,StyleSheet,FlatList,Button,TouchableOpacity} from 'react-native';
+import React,{useContext,useState} from 'react';
+import {Text,View,StyleSheet,FlatList,Button,TouchableOpacity,Image,TextInput,StatusBar,Dimensions} from 'react-native';
 import {Context} from '../context/BlogContext';
-import {Feather} from '@expo/vector-icons' ;
+import {AntDesign,Feather,SimpleLineIcons,Ionicons} from '@expo/vector-icons' ;
+const wR = Dimensions.get("window").width/392.72727272727275; //width ratio
+const hR = Dimensions.get("window").height/776; //height ratio
+
 const IndexScreen = ({navigation})=>{
     const {state,addBlogPost,deleteBlogPost} = useContext(Context);
-    return <View>
+    console.log(state);
+    const [search,setSearch] = useState("");
+    if(state.length===0)
+    {
+        return  <View style = {styles.screenfornonotes}>
+            <Text style ={styles.nonotes}>YOU DO NOT HAVE ANY{'\n'}NOTES CURRENTLY</Text>
+        </View>
+    }
+    return <View style = {styles.screen}>
+        <View style = {styles.search}>
+        <StatusBar hidden={false} />
+        <Ionicons name="ios-search" size= {28*wR} color = "#BEB184" />
+        <TextInput 
+            autoCapitalize ="none"
+            autoCorrect = {false}
+            value = {search}
+            onChangeText = {(newTerm)=>setSearch(newTerm)}
+            placeholder = "SEARCH"
+            placeholderTextColor = "#BEB184"
+            style = {{fontSize : 20*wR,marginLeft : 10*wR,flex :1,color :"#BEB184" }}
+        />
+        </View>
         <FlatList
         data={state}
-        keyExtractor = {(item)=>item.title}
+        keyExtractor = {(item)=>String(item.id)}
+        style = {{marginHorizontal :15*wR}}
         renderItem = {({item}) =>{ return ( 
             <TouchableOpacity onPress = {()=>navigation.navigate("Show",{id : item.id})}>
             <View style ={styles.row}>
-            <Text style = {styles.title}>{item.title} - {item.id}</Text>
+            <Text style = {styles.title}>{item.title}</Text>
+            <Text>{item.lastModified.date}.{item.lastModified.month}.{item.lastModified.year} , {item.lastModified.hours}:{item.lastModified.minutes}</Text>
             <TouchableOpacity onPress = {()=>deleteBlogPost(item.id)}>
             <Feather name="trash-2" style={styles.icon} />
             </TouchableOpacity>
@@ -27,30 +53,57 @@ const IndexScreen = ({navigation})=>{
 IndexScreen.navigationOptions = ({navigation})=>{
     return{
         headerRight : ()=>{
-            return (
-                <TouchableOpacity onPress={()=> navigation.navigate("Create")}>
-                <Feather name = "plus" size ={30} />
-                </TouchableOpacity>
-            )
-        }
+        return (
+            <View style ={{flexDirection:"row"}}>
+            <TouchableOpacity onPress ={()=>navigation.navigate("Create")}>
+            <AntDesign style ={{marginRight : 15*wR}} name ="pluscircle" size ={26*wR} color="#B2983B" />
+            </TouchableOpacity>
+            <SimpleLineIcons style ={{marginRight : 15*wR}} name ="options-vertical" size ={26*wR} color="#B2983B" />
+            </View>
+        ) }
     };
 };
 const styles = StyleSheet.create({
+    nonotes : {
+        color : "#B2983B",
+        fontSize : 20*wR,
+        textAlign : "center"
+    },
+    screenfornonotes : {
+        borderTopWidth : 1.7*wR,
+        borderTopColor : "#BEB184",
+        backgroundColor : "#1D1D1D",
+        flex :1,
+        justifyContent:"center",
+        alignItems:"center"
+    },
+    screen : {
+        borderTopWidth : 1.7*wR,
+        borderTopColor : "#BEB184",
+        backgroundColor : "#1D1D1D",
+        flex :1
+    },
+    search  :{
+        backgroundColor : "#000000",alignItems : "center",paddingVertical :8*hR,paddingHorizontal : 8*wR,marginHorizontal : 10*wR,
+        marginTop : 15*hR,borderColor : "#B2983B",borderRadius : 10*wR,borderWidth : 1.8*wR,flexDirection : "row",
+        width :"95%" ,
+        aspectRatio : 342/40
+    },
     row: {
+        backgroundColor : "#B2983B",
+        borderRadius : 6,
         flexDirection : 'row',
         justifyContent : 'space-between',
         //marginVertical :10,
-       paddingVertical :20,
-       paddingHorizontal : 10,
-        borderBottomWidth :1,
-        //borderTopWidth :1,
-        borderColor : 'gray'
+       paddingVertical :20*hR,
+       paddingHorizontal : 10*wR,
+       marginTop :15*hR,
     },
     title : {
-        fontSize :18
+        fontSize :18*wR
     },
     icon : {
-        fontSize : 24
+        fontSize : 24*wR
     }
 })
 export default IndexScreen ;
