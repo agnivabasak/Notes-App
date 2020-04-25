@@ -1,6 +1,7 @@
 import React,{useState} from 'react' ;
 import InputScrollView from 'react-native-input-scroll-view' ;
 import {Text,TextInput,Button,View,StyleSheet,Dimensions,TouchableOpacity,KeyboardAvoidingView} from 'react-native';
+import HideWithKeyboard from 'react-native-hide-with-keyboard'
 //The save button keeps getting pushed up in a crooked manner when the content is being entered
 const wR = Dimensions.get("window").width/392.72727272727275; //width ratio
 const hR = Dimensions.get("window").height/776; //height ratio
@@ -11,9 +12,11 @@ const BlogPostForm = ({onSubmit,initialValues})=>{
         <TextInput style = {styles.titleInput} value={title} placeholder="Enter Title" placeholderTextColor="#000000" onChangeText = {newText=>setTitle(newText)} />
         <TextInput style ={styles.contentInput} value ={content} multiline ={true} placeholder="Enter notes about the title" placeholderTextColor="#000000" onChangeText = {newTerm=> setContent(newTerm)} />
         <TouchableOpacity onPress = {()=>onSubmit(title,content)}>
-            <View style={styles.button}>
-                <Text style = {styles.buttontext}>SAVE</Text>
-            </View>
+            <HideWithKeyboard>
+                <View style={styles.button}>
+                    <Text style = {styles.buttontext}>SAVE</Text>
+                </View>
+            </HideWithKeyboard>
         </TouchableOpacity>
     </View>
     )
