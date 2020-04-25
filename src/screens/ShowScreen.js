@@ -14,7 +14,9 @@ const ShowScreen = ({navigation})=>{
     return (
         <View style = {styles.background}>
             <View style ={styles.note}>
-                <Text style = {styles.title}>{blogpost.title}</Text>
+                <ScrollView contentContainerStyle={styles.titleView2}  style={styles.titleView} horizontal showsHorizontalScrollIndicator ={false}>
+                    <Text style = {styles.title}>{blogpost.title}</Text>
+                </ScrollView>
                 <Text style= {styles.updatedinfo}>Last updated on {blogpost.lastModified.date}.{blogpost.lastModified.month}.{blogpost.lastModified.year} , {hour}:{blogpost.lastModified.minutes} {indicator}</Text>
                 <ScrollView style ={styles.contentScroll}>
                 <Text style ={styles.content}>{blogpost.content}</Text>
@@ -47,10 +49,15 @@ const styles = StyleSheet.create({
     },
     title : {
         fontSize :20*wR,
-        marginTop : 8*hR,
+        marginTop : 16*hR,
+    },
+    titleView : {
         marginHorizontal: 20*wR,
-        paddingBottom : 1*hR,
-        borderBottomWidth : 1.7*wR
+        borderBottomWidth : 1.7*wR,
+    },
+    titleView2 : {
+        alignItems : "flex-end",
+        paddingBottom : 3*wR
     },
     updatedinfo : {
         marginLeft: 20*wR,
@@ -58,6 +65,7 @@ const styles = StyleSheet.create({
     },
     content: {
         fontSize :18*wR,
+        color:"#151515"
     },
     contentScroll : {
         marginHorizontal : 20*wR,

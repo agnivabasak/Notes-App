@@ -26,9 +26,9 @@ initialValues : {title:"" ,content : ""}
 const styles = StyleSheet.create({
     titleInput : {
         fontSize :20*wR,
-        marginTop : 8*hR,
+        marginTop : 18*hR,
         marginHorizontal: 20*wR,
-        paddingBottom : 1*hR,
+        paddingBottom : 3*hR,
         borderBottomWidth : 1.7*wR
     },
     contentInput : {
@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
         marginVertical : 25*hR,
         height : "78%",
         textAlignVertical :"top",
+        color : "#151515"
     },
     note : {
         backgroundColor :"#B2983B",

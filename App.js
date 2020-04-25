@@ -1,5 +1,5 @@
 import React from 'react';
-import {Dimensions} from 'react-native';
+import {Dimensions,StatusBar} from 'react-native';
 import {createAppContainer} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 import IndexScreen from './src/screens/IndexScreen' ; 
@@ -29,5 +29,5 @@ const navigator = createStackNavigator(
 );
 
 const App =  createAppContainer(navigator) ;
-export default ()=>{return (<Provider><App/></Provider>);
+export default ()=>{return (<Provider><App/><StatusBar hidden={false} /></Provider>);
 }
