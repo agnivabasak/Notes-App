@@ -7,7 +7,6 @@ const hR = Dimensions.get("window").height/776; //height ratio
 
 const IndexScreen = ({navigation})=>{
     const {state,addBlogPost,deleteBlogPost} = useContext(Context);
-    console.log(state);
     const [search,setSearch] = useState("");
     if(state.length===0)
     {
@@ -33,15 +32,20 @@ const IndexScreen = ({navigation})=>{
         data={state}
         keyExtractor = {(item)=>String(item.id)}
         style = {{marginHorizontal :15*wR}}
-        renderItem = {({item}) =>{ return ( 
+        renderItem = {({item}) =>{ 
+            let indicator = "AM";let hour;
+            if(item.lastModified.hours>12) indicator = "PM";
+            if(item.lastModified.hours>12)hour = Number(item.lastModified.hours) -12;
+            else hour = Number(item.lastModified.hours);
+            return ( 
             <TouchableOpacity onPress = {()=>navigation.navigate("Show",{id : item.id})}>
-            <View style ={styles.row}>
-            <Text style = {styles.title}>{item.title}</Text>
-            <Text>{item.lastModified.date}.{item.lastModified.month}.{item.lastModified.year} , {item.lastModified.hours}:{item.lastModified.minutes}</Text>
-            <TouchableOpacity onPress = {()=>deleteBlogPost(item.id)}>
-            <Feather name="trash-2" style={styles.icon} />
-            </TouchableOpacity>
-            </View>
+                <View style ={styles.row}>
+                    <View style={styles.headerRow}>
+                        <Text numberOfLines={1} style = {styles.title}>{item.title}</Text>
+                        <Text style={styles.dateandtime}>{item.lastModified.date}.{item.lastModified.month}.{item.lastModified.year} , {hour}:{item.lastModified.minutes} {indicator}</Text>
+                    </View>
+                    <Text numberOfLines={1} style={styles.content}>{item.content}</Text>
+                </View>
             </TouchableOpacity>
         )
          }
@@ -91,16 +95,29 @@ const styles = StyleSheet.create({
     },
     row: {
         backgroundColor : "#B2983B",
-        borderRadius : 6,
-        flexDirection : 'row',
-        justifyContent : 'space-between',
+        borderRadius : 6*wR,
         //marginVertical :10,
-       paddingVertical :20*hR,
+       paddingVertical :18*hR,
        paddingHorizontal : 10*wR,
        marginTop :15*hR,
     },
+    headerRow :{
+        flexDirection :"row",
+        justifyContent : "space-between"
+    },
     title : {
-        fontSize :18*wR
+        fontSize :18*wR,
+        maxWidth : "53%",
+        marginBottom : 3*hR
+    },
+    dateandtime : {
+        fontSize : 13*wR,
+        marginTop : 4.5*hR,
+        color : "#333026"
+    },
+    content :{
+        marginTop :5*hR,
+        color : "#333026"
     },
     icon : {
         fontSize : 24*wR

@@ -9,10 +9,8 @@ const ShowScreen = ({navigation})=>{
     const blogpost = state.find((blog)=>blog.id ===navigation.getParam("id"));
     let indicator = "AM";let hour;
     if(blogpost.lastModified.hours>12) indicator = "PM";
-    console.log(blogpost.lastModified.hours);
     if(blogpost.lastModified.hours>12)hour = Number(blogpost.lastModified.hours) -12;
     else hour = Number(blogpost.lastModified.hours);
-    console.log(hour);
     return (
         <View style = {styles.background}>
             <View style ={styles.note}>
