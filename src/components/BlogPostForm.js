@@ -12,11 +12,11 @@ const BlogPostForm = ({onSubmit,initialValues})=>{
         <TextInput style = {styles.titleInput} value={title} placeholder="Enter Title" placeholderTextColor="#000000" onChangeText = {newText=>setTitle(newText)} />
         <TextInput style ={styles.contentInput} value ={content} multiline ={true} placeholder="Enter notes about the title" placeholderTextColor="#000000" onChangeText = {newTerm=> setContent(newTerm)} />
         <TouchableOpacity onPress = {()=>onSubmit(title,content)}>
-            <View style={styles.button}>
-                <HideWithKeyboard>
+            <HideWithKeyboard>
+                <View style={styles.button}>
                     <Text style = {styles.buttontext}>SAVE</Text>
-                </HideWithKeyboard>
-            </View>
+                </View>
+            </HideWithKeyboard>
         </TouchableOpacity>
     </View>
     )
