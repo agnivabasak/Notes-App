@@ -1,5 +1,5 @@
 import React,{useState} from 'react' ;
-import InputScrollView from 'react-native-input-scroll-view' ;
+import HideWithKeyboard from 'react-native-hide-with-keyboard';
 import {Text,TextInput,Button,View,StyleSheet,Dimensions,TouchableOpacity,KeyboardAvoidingView} from 'react-native';
 //The save button keeps getting pushed up in a crooked manner when the content is being entered
 const wR = Dimensions.get("window").width/392.72727272727275; //width ratio
@@ -9,11 +9,18 @@ const BlogPostForm = ({onSubmit,initialValues})=>{
     const [content,setContent] = useState(initialValues.content);
     return (<View style ={styles.note}>
         <TextInput style = {styles.titleInput} value={title} placeholder="Enter Title" placeholderTextColor="#000000" onChangeText = {newText=>setTitle(newText)} />
-        <TextInput style ={styles.contentInput} value ={content} multiline ={true} placeholder="Enter notes about the title" placeholderTextColor="#000000" onChangeText = {newTerm=> setContent(newTerm)} />
-        <TouchableOpacity onPress = {()=>onSubmit(title,content)}>
-            <View style={styles.button}>
-                <Text style = {styles.buttontext}>SAVE</Text>
-            </View>
+        <TextInput style ={styles.contentInput}  value ={content} multiline ={true} placeholder="Enter notes about the title" placeholderTextColor="#000000" onChangeText = {newTerm=> setContent(newTerm)} />
+        <TouchableOpacity activeOpacity = {0.6} onPress = {()=>{
+            if(title === "" && content!== "") {onSubmit("Draft Title",content)}
+            else if(content === "" && title!=="") {onSubmit(title,"Draft Content")}
+            else if(title==="" && content===""){onSubmit("Draft Title","Draft Content")}
+            else onSubmit(title,content)
+            }}>
+                <HideWithKeyboard>
+                    <View style={styles.button}>
+                        <Text style = {styles.buttontext}>SAVE</Text>
+                    </View>
+                </HideWithKeyboard>
         </TouchableOpacity>
     </View>
     )

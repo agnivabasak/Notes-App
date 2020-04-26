@@ -15,10 +15,11 @@ const IndexScreen = ({navigation})=>{
             <Text style ={styles.nonotes}>YOU DO NOT HAVE ANY{'\n'}NOTES CURRENTLY</Text>
         </View>
     }
+    const state2 = state.filter((curval)=> (curval.title.toUpperCase()).indexOf(search.toUpperCase())!==-1 || (curval.content.toUpperCase()).indexOf(search.toUpperCase()) !== -1);
     return <View style = {styles.screen}>
-        <View style = {styles.search}>
+        <View style = {{...styles.search,opacity : show?0.6 :1}}>
         <Ionicons name="ios-search" size= {28*wR} color = "#BEB184" />
-        {show?<Text style ={{fontSize : 20*wR,marginLeft : 10*wR,flex :1,color : "#BEB184"}}>{search===""?"SEARCH":search}</Text> : 
+        {show?<Text style ={{fontSize : 20*wR,marginLeft : 10*wR,flex :1,color : "#BEB184",marginBottom:3*hR}}>{search===""?"SEARCH":search}</Text> : 
         <TextInput 
             autoCapitalize ="none"
             autoCorrect = {false}
@@ -30,17 +31,17 @@ const IndexScreen = ({navigation})=>{
         />}
         </View>
         <FlatList
-        data={state}
+        data={state2}
         keyExtractor = {(item)=>String(item.id)}
         style = {{marginHorizontal :15*wR,marginVertical: 15*hR}}
-        renderItem = {({item}) =>{ 
+        renderItem = {({item,index}) =>{ 
             let indicator = "AM";let hour;
             if(item.lastModified.hours>12) indicator = "PM";
             if(item.lastModified.hours>12)hour = Number(item.lastModified.hours) -12;
             else hour = Number(item.lastModified.hours);
             return ( 
-            <TouchableOpacity onLongPress ={()=>{checkreverse(item.id);!show?setShow(true):null}} onPress = {show? ()=>checkreverse(item.id) : ()=>navigation.navigate("Show",{id : item.id})}>
-                <View style = {item.id===state.length ?styles.rowFirstElement : styles.row } >
+            <TouchableOpacity activeOpacity = {0.8}  onLongPress ={()=>{checkreverse(item.id);!show?setShow(true):null}} onPress = {show? ()=>checkreverse(item.id) : ()=>navigation.navigate("Show",{id : item.id})}>
+                <View style = {index===0 ?styles.rowFirstElement : styles.row } >
                     <View style={styles.headerRow}>
                         <View style = {{flexDirection : "row",maxWidth :"53%"}}>
                             {show?(item.check?<View style={styles.checkedicon}></View> : <View style={styles.uncheckedicon}></View> ):null}
@@ -56,11 +57,11 @@ const IndexScreen = ({navigation})=>{
          }
         />
     {show? <View style = {styles.bottomDrawer}>
-         <TouchableOpacity style = {styles.delete} onPress ={()=>{deleteMultipleBlogPosts();setShow(false);}}>
+         <TouchableOpacity activeOpacity = {0.5} style = {styles.delete} onPress ={()=>{deleteMultipleBlogPosts();setShow(false)}}>
             <MaterialCommunityIcons name="delete" size={24*wR} color="#B2983B"/>
             <Text style ={styles.deleteText}>DELETE</Text>
         </TouchableOpacity>
-        <TouchableOpacity style = {styles.cancel} onPress={()=>{uncheckall();setShow(false);}}>
+        <TouchableOpacity activeOpacity = {0.5} style = {styles.cancel} onPress={()=>{uncheckall();setShow(false);}}>
             <Text style ={styles.cancelText}>CANCEL</Text>
             <AntDesign name="closecircleo" size={24*wR} color ="#B2983B" />
         </TouchableOpacity>
@@ -73,8 +74,8 @@ IndexScreen.navigationOptions = ({navigation})=>{
     return{
         headerRight : ()=>{
         return (
-            <View style ={{flexDirection:"row"}}>
-            <TouchableOpacity onPress ={()=>navigation.navigate("Create")}>
+            <View style ={{flexDirection : "row"}}>
+            <TouchableOpacity activeOpacity = {0.6} onPress ={()=>navigation.navigate("Create")}>
             <AntDesign style ={{marginRight : 15*wR}} name ="pluscircle" size ={26*wR} color="#B2983B" />
             </TouchableOpacity>
             <SimpleLineIcons style ={{marginRight : 15*wR}} name ="options-vertical" size ={26*wR} color="#B2983B" />
@@ -85,7 +86,7 @@ IndexScreen.navigationOptions = ({navigation})=>{
 const styles = StyleSheet.create({
     delete :{
         flexDirection : "row",
-        borderColor : "#B2983B",
+        borderColor : "#BEB184",
         borderRightWidth : 2*wR,
         flex:1,
         alignItems : "center",
@@ -93,7 +94,7 @@ const styles = StyleSheet.create({
     },
     deleteText :{
         color : "#B2983B",
-        fontSize : 22*wR,
+        fontSize : 20*wR,
         margin : 7*wR,
     },
     cancel :{
@@ -104,7 +105,7 @@ const styles = StyleSheet.create({
     },
     cancelText : {
         color: "#B2983B",
-        fontSize : 22*wR,
+        fontSize : 20*wR,
         margin :7*wR,
     },
     nonotes : {
@@ -114,7 +115,8 @@ const styles = StyleSheet.create({
     },
     bottomDrawer : {
         height : "7%",
-        width : "100%",
+        width : "78%",
+        alignSelf : "center",
         backgroundColor : "#000000",
         borderWidth : 2*wR,
         borderBottomWidth :0 ,
