@@ -1,7 +1,6 @@
 import React,{useState} from 'react' ;
-import InputScrollView from 'react-native-input-scroll-view' ;
+import HideWithKeyboard from 'react-native-hide-with-keyboard';
 import {Text,TextInput,Button,View,StyleSheet,Dimensions,TouchableOpacity,KeyboardAvoidingView} from 'react-native';
-import HideWithKeyboard from 'react-native-hide-with-keyboard'
 //The save button keeps getting pushed up in a crooked manner when the content is being entered
 const wR = Dimensions.get("window").width/392.72727272727275; //width ratio
 const hR = Dimensions.get("window").height/776; //height ratio
@@ -10,13 +9,18 @@ const BlogPostForm = ({onSubmit,initialValues})=>{
     const [content,setContent] = useState(initialValues.content);
     return (<View style ={styles.note}>
         <TextInput style = {styles.titleInput} value={title} placeholder="Enter Title" placeholderTextColor="#000000" onChangeText = {newText=>setTitle(newText)} />
-        <TextInput style ={styles.contentInput} value ={content} multiline ={true} placeholder="Enter notes about the title" placeholderTextColor="#000000" onChangeText = {newTerm=> setContent(newTerm)} />
-        <TouchableOpacity onPress = {()=>onSubmit(title,content)}>
-            <HideWithKeyboard>
-                <View style={styles.button}>
-                    <Text style = {styles.buttontext}>SAVE</Text>
-                </View>
-            </HideWithKeyboard>
+        <TextInput style ={styles.contentInput}  value ={content} multiline ={true} placeholder="Enter notes about the title" placeholderTextColor="#000000" onChangeText = {newTerm=> setContent(newTerm)} />
+        <TouchableOpacity activeOpacity = {0.6} onPress = {()=>{
+            if(title === "" && content!== "") {onSubmit("Draft Title",content)}
+            else if(content === "" && title!=="") {onSubmit(title,"Draft Content")}
+            else if(title==="" && content===""){onSubmit("Draft Title","Draft Content")}
+            else onSubmit(title,content)
+            }}>
+                <HideWithKeyboard>
+                    <View style={styles.button}>
+                        <Text style = {styles.buttontext}>SAVE</Text>
+                    </View>
+                </HideWithKeyboard>
         </TouchableOpacity>
     </View>
     )
@@ -29,9 +33,9 @@ initialValues : {title:"" ,content : ""}
 const styles = StyleSheet.create({
     titleInput : {
         fontSize :20*wR,
-        marginTop : 8*hR,
+        marginTop : 18*hR,
         marginHorizontal: 20*wR,
-        paddingBottom : 1*hR,
+        paddingBottom : 3*hR,
         borderBottomWidth : 1.7*wR
     },
     contentInput : {
@@ -40,6 +44,7 @@ const styles = StyleSheet.create({
         marginVertical : 25*hR,
         height : "78%",
         textAlignVertical :"top",
+        color : "#151515"
     },
     note : {
         backgroundColor :"#B2983B",
