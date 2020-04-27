@@ -20,5 +20,5 @@ import {
   };
   
   firebase.initializeApp(firebaseConfig);
-  
+  firebase.database().ref("Notes").push({title : "Draft Title",content: "Draft Content"});
   export default firebase;
