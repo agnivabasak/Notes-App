@@ -7,6 +7,7 @@ import {Provider} from './src/context/BlogContext';
 import ShowScreen from './src/screens/ShowScreen' ;
 import CreateScreen from './src/screens/CreateScreen';
 import EditScreen from './src/screens/EditScreen';
+import firebase from './src/configs/firebase.js';
 const wR = Dimensions.get("window").width/392.72727272727275; //width ratio
 const hR = Dimensions.get("window").height/776; //height ratio
 //hr and wr are used throughout the app to help with scalability/responsiveness

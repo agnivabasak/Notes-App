@@ -2,9 +2,9 @@ import React,{useContext,useState} from 'react';
 import {Text,View,StyleSheet,FlatList,Button,TouchableOpacity,Image,TextInput,StatusBar,Dimensions} from 'react-native';
 import {Context} from '../context/BlogContext';
 import {AntDesign,Feather,SimpleLineIcons,Ionicons,FontAwesome,MaterialCommunityIcons} from '@expo/vector-icons' ;
+
 const wR = Dimensions.get("window").width/392.72727272727275; //width ratio
 const hR = Dimensions.get("window").height/776; //height ratio
-
 const IndexScreen = ({navigation})=>{
     const {state,checkreverse,deleteMultipleBlogPosts,uncheckall} = useContext(Context);
     const [search,setSearch] = useState("");

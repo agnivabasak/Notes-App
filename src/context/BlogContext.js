@@ -1,5 +1,6 @@
 import createDataContext from './createDataContext';
 
+
 const BlogReducer = (state,action) =>{
     switch(action.type)
     {
@@ -44,7 +45,9 @@ const BlogReducer = (state,action) =>{
     }
 } ;
 const addBlogPost = (dispatch)=>{
-    return (title,content,lastModified,callback)=>{dispatch({type : 'add_BlogPost',payload : {title,content,lastModified}})
+    return (title,content,lastModified,callback)=>{
+        dispatch({type : 'add_BlogPost',payload : {title,content,lastModified}
+    })
     if(callback) callback();        
 };
 };
