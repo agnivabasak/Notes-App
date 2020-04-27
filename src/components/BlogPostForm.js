@@ -1,6 +1,7 @@
 import React,{useState} from 'react' ;
 import HideWithKeyboard from 'react-native-hide-with-keyboard';
 import {Text,TextInput,Button,View,StyleSheet,Dimensions,TouchableOpacity,KeyboardAvoidingView} from 'react-native';
+import HideWithKeyboard from 'react-native-hide-with-keyboard'
 //The save button keeps getting pushed up in a crooked manner when the content is being entered
 const wR = Dimensions.get("window").width/392.72727272727275; //width ratio
 const hR = Dimensions.get("window").height/776; //height ratio
