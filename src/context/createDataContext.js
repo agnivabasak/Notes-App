@@ -1,4 +1,5 @@
 import React,{useReducer} from 'react';
+import firebase from "../configs/firebase";
 export default (reducer,actions,initialState) =>{
     const Context = React.createContext();
     const Provider = ({children}) =>{
