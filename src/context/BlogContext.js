@@ -52,6 +52,9 @@ const BlogReducer = (state,action) =>{
             updateData(state2);
             return state2;
         }
+        case "set_state" :{
+            return action.payload;
+        }
         default : return state ;
     }
 } ;
@@ -89,4 +92,9 @@ const checkreverse = (dispatch)=>{
         dispatch({type : "check_reverse",payload :id})
     };
 };
-export const {Context,Provider} = createDataContext(BlogReducer,{addBlogPost,deleteBlogPost,editBlogPost,uncheckall,deleteMultipleBlogPosts,checkreverse},getData());
+const setState = (dispatch)=>{
+    return (newState)=>{
+        dispatch({type:"set_state",payload : newState})
+    }
+}
+export const {Context,Provider} = createDataContext(BlogReducer,{addBlogPost,deleteBlogPost,editBlogPost,uncheckall,deleteMultipleBlogPosts,checkreverse,setState},[]);

@@ -1,14 +1,22 @@
-import React,{useContext,useState} from 'react';
+import React,{useContext,useState,useEffect} from 'react';
 import {Text,View,StyleSheet,FlatList,Button,TouchableOpacity,Image,TextInput,StatusBar,Dimensions} from 'react-native';
 import {Context} from '../context/BlogContext';
 import {AntDesign,Feather,SimpleLineIcons,Ionicons,FontAwesome,MaterialCommunityIcons} from '@expo/vector-icons' ;
-
+import {getData} from "../utils/firebase";
 const wR = Dimensions.get("window").width/392.72727272727275; //width ratio
 const hR = Dimensions.get("window").height/776; //height ratio
 const IndexScreen = ({navigation})=>{
-    const {state,checkreverse,deleteMultipleBlogPosts,uncheckall} = useContext(Context);
+    const {state,checkreverse,deleteMultipleBlogPosts,uncheckall,setState,addBlogPost} = useContext(Context);
     const [search,setSearch] = useState("");
     const [show,setShow] = useState(false);
+    useEffect(()=>{
+        async function initializeState(){
+            newState = await getData();
+            setState(newState);
+        }
+        initializeState();
+    }
+    ,[]);
     if(state.length===0)
     {
         return  <View style = {styles.screenfornonotes}>
