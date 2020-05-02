@@ -1,22 +1,14 @@
 import React,{useContext,useState,useEffect} from 'react';
 import {Text,View,StyleSheet,FlatList,Button,TouchableOpacity,Image,TextInput,StatusBar,Dimensions} from 'react-native';
+import {TransitionPresets} from "react-navigation-stack";
 import {Context} from '../context/BlogContext';
 import {AntDesign,Feather,SimpleLineIcons,Ionicons,FontAwesome,MaterialCommunityIcons} from '@expo/vector-icons' ;
-import {getData} from "../utils/firebase";
 const wR = Dimensions.get("window").width/392.72727272727275; //width ratio
 const hR = Dimensions.get("window").height/776; //height ratio
 const IndexScreen = ({navigation})=>{
-    const {state,checkreverse,deleteMultipleBlogPosts,uncheckall,setState,addBlogPost} = useContext(Context);
+    const {state,checkreverse,deleteMultipleBlogPosts,uncheckall} = useContext(Context);
     const [search,setSearch] = useState("");
     const [show,setShow] = useState(false);
-    useEffect(()=>{
-        async function initializeState(){
-            newState = await getData();
-            setState(newState);
-        }
-        initializeState();
-    }
-    ,[]);
     if(state.length===0)
     {
         return  <View style = {styles.screenfornonotes}>
@@ -35,7 +27,7 @@ const IndexScreen = ({navigation})=>{
             onChangeText = {(newTerm)=>setSearch(newTerm)}
             placeholder = "SEARCH"
             placeholderTextColor = "#BEB184"
-            style = {{fontSize : 20*wR,marginLeft : 10*wR,flex :1,color :"#BEB184" }}
+            style = {{fontSize : 20*wR,marginLeft : 10*wR,flex :1,color :"#BEB184"}}
         />}
         </View>
         <FlatList
@@ -80,6 +72,8 @@ const IndexScreen = ({navigation})=>{
 
 IndexScreen.navigationOptions = ({navigation})=>{
     return{
+        ...TransitionPresets.FadeFromBottomAndroid,
+        headerLeft : ()=>null,
         headerRight : ()=>{
         return (
             <View style ={{flexDirection : "row"}}>
@@ -152,7 +146,7 @@ const styles = StyleSheet.create({
         flex :1
     },
     search  :{
-        backgroundColor : "#000000",alignItems : "center",paddingVertical :8*hR,paddingHorizontal : 8*wR,marginHorizontal : 10*wR,
+        backgroundColor : "#0D0D0D",alignItems : "center",paddingVertical :8*hR,paddingHorizontal : 8*wR,marginHorizontal : 10*wR,
         marginTop : 15*hR,borderColor : "#B2983B",borderRadius : 10*wR,borderWidth : 1.8*wR,flexDirection : "row",
         width :"95%" ,
         aspectRatio : 342/40
