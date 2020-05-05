@@ -15,7 +15,7 @@ const SplashScreen = ({navigation})=>{
                 setState(newState);
             }
             await initializeState();
-            navigation.navigate("Index");
+            navigation.navigate("Login");
         }
         SplashScreenJob();
     }
