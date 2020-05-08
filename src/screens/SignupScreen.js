@@ -1,37 +1,31 @@
-import React,{useState} from "react";
-import {View,Text,StyleSheet,TextInput,Dimensions,TouchableOpacity} from "react-native";
+import React,{useState,useContext} from "react";
+import {View,Text,StyleSheet,TextInput,Dimensions,TouchableOpacity,Keyboard,ActivityIndicator} from "react-native";
+import {Overlay} from "react-native-elements";
 import {FontAwesome5} from "@expo/vector-icons" ;
+import {getData} from "../utils/firebase";
+import {Context} from '../context/BlogContext';
+import firebase from "../configs/firebase.js";
 const wR = Dimensions.get("window").width/392.72727272727275; //width ratio
 const hR = Dimensions.get("window").height/776; //height ratio
 var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");//digit,lowercase,uppercase,atleast 8char
 var emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-var nameRegex = /^[_a-zA-z][_a-zA-Z0-9]*$/
 const SignupScreen = ({navigation})=>{
-    const [name,setName] = useState("");
+    const {setState} = useContext(Context);
     const [pass,setPass] = useState("");
+    const [finalScreen,setFinalScreen] = useState(false);
     const [confirmPass,setConfirmPass] = useState("");
     const [emailID,setEmailId] = useState("");
-    const [lengthWarning,setLengthWarning] = useState(false);
-    const [randomnessWarning,setRandomnessWarning] = useState(false);
-    const [matchWarning,setMatchWarning] = useState(false);
-    const [infoWarning,setInfoWarning] = useState(false);
-    const [emailWarning,setEmailWarning] = useState(false);
-    const [nameWarning,setNameWarning] = useState(false);
-    return <View style = {styles.screenStyle}>
+    const [warning,setWarning] = useState("");
+    return (
+        <View style = {styles.screenStyle}>
+        <Overlay overlayStyle={{backgroundColor:"transparent",justifyContent:"center",alignItems:"center"}} fullScreen={true} isVisible={finalScreen} onBackdropPress={()=>{}}>
+            <ActivityIndicator size="large" color="#B2983B"/>
+            <Text style={{color:"#B2983B",fontSize:18*wR,backgroundColor:"#0D0D0D",padding:5*wR,borderRadius:9*wR,marginTop:30*hR}}>Please verify your email ID and then log in </Text>
+        </Overlay>
         <Text style = {styles.headerStyle}>Create New Account</Text>
         <View style = {styles.inputStyle}>
             <TextInput style={styles.inputTextStyle} 
-            placeholder="Username" 
-            value = {name}
-            onChangeText = {(newText)=>setName(newText)}
-            autoCapitalize = "none"
-            autoCorrect = {false}
-            placeholderTextColor = "#BEB184"
-            />
-        </View>
-        <View style = {styles.inputStyle}>
-            <TextInput style={styles.inputTextStyle} 
-            placeholder="Email Id" 
+            placeholder="Email ID" 
             value = {emailID}
             onChangeText = {(newText)=>setEmailId(newText)}
             autoCapitalize = "none"
@@ -62,61 +56,64 @@ const SignupScreen = ({navigation})=>{
             />
         </View>
         {
-            lengthWarning?<Text style={styles.warningStyle}><FontAwesome5 name="exclamation-circle" color = "#BEB184" size={15}/>  A password must contain atleast 8 characters !</Text>:null
-        }
-        {randomnessWarning?<Text style={styles.warningStyle}><FontAwesome5 name="exclamation-circle" color = "#BEB184" size={15}/>  A password should contain atleast a lowercase letter,an uppercase letter
-        and a digit !</Text>:null}
-        {
-            matchWarning?<Text style={styles.warningStyle}><FontAwesome5 name="exclamation-circle" color = "#BEB184" size={15}/>  The password and the confirmation password do not match !</Text>:null
-        }
-        {
-            infoWarning?<Text style={styles.warningStyle}><FontAwesome5 name="exclamation-circle" color = "#BEB184" size={15}/>  Please enter all the above fields !</Text>:null
-        }
-        {
-            emailWarning?<Text style={styles.warningStyle}><FontAwesome5 name="exclamation-circle" color = "#BEB184" size={15}/>  Please enter a valid email id !</Text>:null
-        }
-        {
-            nameWarning?<Text style={styles.warningStyle}><FontAwesome5 name="exclamation-circle" color = "#BEB184" size={15}/>  An username must begin with a letter or underscore and it can only contain letters,underscore and digits!</Text>:null
+            warning!==""?<Text style={styles.warningStyle}><FontAwesome5 name="exclamation-circle" color = "#BEB184" size={15}/>{warning} </Text>: null
         }
         <TouchableOpacity
         onPress = {()=>{
-            setRandomnessWarning(false);
-            setLengthWarning(false);
-            setMatchWarning(false);
-            setInfoWarning(false);
-            setEmailWarning(false);
-            setNameWarning(false);
-            if(pass==="" || name==="" || emailID==="" ||confirmPass===""){
-                setInfoWarning(true);
-            }
-            else if(!nameRegex.test(name))
-            {
-                setNameWarning(true);
+            setWarning("");
+            Keyboard.dismiss();
+            if(pass==="" || emailID==="" ||confirmPass===""){
+                setWarning("  Please enter all the above fields !");
             }
             else if(!emailRegex.test(emailID))
             {
-                setEmailWarning(true);
+                setWarning("  Please enter a valid email id !");
             }
             else if(pass.length<8)
             {
-                setLengthWarning(true);
+                setWarning("  A password must be atleast 8 characters long !");
             }
             else if(!strongRegex.test(pass))
                 {
-                    setRandomnessWarning(true);
+                    setWarning("  A password should contain atleast a lowercase letter,an uppercase letter and a digit !");
                 }
             else if(pass!==confirmPass)
             {
-                setMatchWarning(true);
+                setWarning("  The password and the confirmation password do not match !");
             }  
+            else{
+                firebase.auth().createUserWithEmailAndPassword(emailID,pass)
+                .then(()=>{
+                    setFinalScreen(true);
+                    async function completeSignUp(){
+                            await firebase.auth().currentUser.sendEmailVerification().catch((error)=>console.log(error));
+                            await firebase.auth().signOut();
+                            setTimeout(function(){
+                                navigation.navigate("Login");
+                            },3000);
+                    }
+                    completeSignUp();
+                })
+                .catch((error)=>{
+                    if(error.code==='auth/email-already-in-use')
+                        setWarning("  The email ID is already in use !");
+                    else if(error.code==='auth/invalid-email')
+                        setWarning("  Please enter a valid email id !");  
+                    else if(error.code==='auth/operation-not-allowed')
+                        setWarning("  There is something wrong with the servers ! Please let the owner of this app know about this issue if it persists!");
+                    else {
+                        setWarning("  Please make sure you are connected to the internet ! If the issue persists , please contact the owner of the app !")
+                    }    
+                });
+            }
         }}
         activeOpacity= {0.6} style = {styles.buttonStyle}>
             <Text style = {styles.buttonTextStyle}>SIGN UP</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress ={()=>{navigation.navigate("Login")}} activeOpacity={0.5}>
+        <TouchableOpacity onPress ={()=>{setWarning("");navigation.navigate("Login")}} activeOpacity={0.5}>
             <Text style = {styles.footerStyle}>Already have an account? Login</Text>
         </TouchableOpacity>    
-    </View>
+    </View>)
 };
 
 SignupScreen.navigationOptions = ()=>{
@@ -134,8 +131,8 @@ const styles = StyleSheet.create({
     headerStyle : {
         color : "#B2983B",
         fontSize : 32*wR,
-        marginTop : 105*hR,
-        marginBottom : 60*hR,
+        marginTop : 135*hR,
+        marginBottom : 80*hR,
     },
     subHeaderStyle : {
         color:"#B2983B",

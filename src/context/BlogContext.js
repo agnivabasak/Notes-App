@@ -41,7 +41,6 @@ const BlogReducer = (state,action) =>{
                     curval.check = !curval.check;
                 return curval;    
             })
-            updateData(state2);
             return state2;
         }
         case "uncheck_all" : {
@@ -49,7 +48,6 @@ const BlogReducer = (state,action) =>{
                 curval.check = false;
                 return curval;
             })
-            updateData(state2);
             return state2;
         }
         case "set_state" :{

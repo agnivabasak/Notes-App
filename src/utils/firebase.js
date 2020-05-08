@@ -2,13 +2,15 @@ import firebase from "../configs/firebase";
 
 export async function getData(){
     let initialState = [];
-    await firebase.database().ref("Notes").once("value").then((snapshot)=>{
+    var userID = await firebase.auth().currentUser.uid;
+    await firebase.database().ref(`Users/${userID}/Notes`).once("value").then((snapshot)=>{
         initialState= snapshot.val()||[];
     });
     return initialState;
 };
 
-export function updateData(state){
-    firebase.database().ref("Notes").set(state);
+export async function updateData(state){
+    var userID = await firebase.auth().currentUser.uid;
+    firebase.database().ref(`Users/${userID}/Notes`).set(state);
 };
 

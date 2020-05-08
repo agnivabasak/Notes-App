@@ -4,21 +4,27 @@ import {TransitionPresets} from "react-navigation-stack";
 import {Context} from '../context/BlogContext';
 import {Ionicons} from "@expo/vector-icons";
 import {getData} from "../utils/firebase";
+import firebase from "../configs/firebase";
 const wR = Dimensions.get("window").width/392.72727272727275; //width ratio
 const hR = Dimensions.get("window").height/776; //height ratio
 const SplashScreen = ({navigation})=>{
     const {setState} = useContext(Context);
     useEffect(()=>{
-        async function SplashScreenJob(){
-            async function initializeState(){
-                newState = await getData();
-                setState(newState);
+            async function splashJob(){
+                var user = await firebase.auth().currentUser;
+                if(user){
+                    var userState = await getData();
+                    setState(userState);
+                    navigation.navigate("Index");
+                }
+                else{
+                    setTimeout(function(){
+                        navigation.navigate("Login");
+                    },1500);
+                }
             }
-            await initializeState();
-            navigation.navigate("Login");
+            splashJob();
         }
-        SplashScreenJob();
-    }
     ,[]);
     return <View style = {styles.screenStyle}>
         <Text style ={styles.headerStyle}>NOTES APP</Text>

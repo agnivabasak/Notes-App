@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "blog",
-    "slug": "blog",
+    "name": "Notes App",
+    "slug": "Notes",
     "platforms": [
       "ios",
       "android",

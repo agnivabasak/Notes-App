@@ -1,14 +1,29 @@
-import React,{useContext,useState,useEffect} from 'react';
-import {Text,View,StyleSheet,FlatList,Button,TouchableOpacity,Image,TextInput,StatusBar,Dimensions} from 'react-native';
+import React,{useContext,useState,useEffect,useRef} from 'react';
+import {Text,View,StyleSheet,FlatList,Button,TouchableOpacity,Image,TextInput,StatusBar,Dimensions,Animated} from 'react-native';
 import {TransitionPresets} from "react-navigation-stack";
 import {Context} from '../context/BlogContext';
 import {AntDesign,Feather,SimpleLineIcons,Ionicons,FontAwesome,MaterialCommunityIcons} from '@expo/vector-icons' ;
+
 const wR = Dimensions.get("window").width/392.72727272727275; //width ratio
 const hR = Dimensions.get("window").height/776; //height ratio
 const IndexScreen = ({navigation})=>{
     const {state,checkreverse,deleteMultipleBlogPosts,uncheckall} = useContext(Context);
     const [search,setSearch] = useState("");
     const [show,setShow] = useState(false);
+    const pos = useRef(new Animated.Value(0.07*Dimensions.get("window").height)).current;
+    const getitup = ()=>{
+        setShow(true);
+        Animated.timing(pos,{
+            toValue : 0,
+            duration :220
+        }).start();
+    };
+    const getitdown =()=>{
+        Animated.timing(pos,{
+            toValue : 0.07*Dimensions.get("window").height,
+            duration :220,
+        }).start(()=>setShow(false));
+    };
     if(state.length===0)
     {
         return  <View style = {styles.screenfornonotes}>
@@ -40,7 +55,7 @@ const IndexScreen = ({navigation})=>{
             if(item.lastModified.hours>12)hour = Number(item.lastModified.hours) -12;
             else hour = Number(item.lastModified.hours);
             return ( 
-            <TouchableOpacity activeOpacity = {0.8}  onLongPress ={()=>{checkreverse(item.id);!show?setShow(true):null}} onPress = {show? ()=>checkreverse(item.id) : ()=>navigation.navigate("Show",{id : item.id})}>
+            <TouchableOpacity activeOpacity = {0.8}  onLongPress ={()=>{checkreverse(item.id);!show?getitup():null}} onPress = {show? ()=>checkreverse(item.id) : ()=>navigation.navigate("Show",{id : item.id})}>
                 <View style = {index===0 ?styles.rowFirstElement : styles.row } >
                     <View style={styles.headerRow}>
                         <View style = {{flexDirection : "row",maxWidth :"53%"}}>
@@ -56,16 +71,16 @@ const IndexScreen = ({navigation})=>{
          }
          }
         />
-    {show? <View style = {styles.bottomDrawer}>
-         <TouchableOpacity activeOpacity = {0.5} style = {styles.delete} onPress ={()=>{deleteMultipleBlogPosts();setShow(false)}}>
+    {show? <Animated.View style = {[styles.bottomDrawer,{transform:[{translateY:pos}]}]}>
+         <TouchableOpacity activeOpacity = {0.5} style = {styles.delete} onPress ={()=>{deleteMultipleBlogPosts();getitdown()}}>
             <MaterialCommunityIcons name="delete" size={24*wR} color="#B2983B"/>
             <Text style ={styles.deleteText}>DELETE</Text>
         </TouchableOpacity>
-        <TouchableOpacity activeOpacity = {0.5} style = {styles.cancel} onPress={()=>{uncheckall();setShow(false);}}>
+        <TouchableOpacity activeOpacity = {0.5} style = {styles.cancel} onPress={()=>{uncheckall();getitdown()}}>
             <Text style ={styles.cancelText}>CANCEL</Text>
             <AntDesign name="closecircleo" size={24*wR} color ="#B2983B" />
         </TouchableOpacity>
-    </View> 
+    </Animated.View> 
     : null}
     </View>
 }
@@ -80,7 +95,11 @@ IndexScreen.navigationOptions = ({navigation})=>{
             <TouchableOpacity activeOpacity = {0.6} onPress ={()=>navigation.navigate("Create")}>
             <AntDesign style ={{marginRight : 15*wR}} name ="pluscircle" size ={26*wR} color="#B2983B" />
             </TouchableOpacity>
-            <SimpleLineIcons style ={{marginRight : 15*wR}} name ="options-vertical" size ={26*wR} color="#B2983B" />
+            <TouchableOpacity activeOpacity ={0.6} onPress={()=>{
+                console.log(navigation,navigation.state)
+            }}>
+                <SimpleLineIcons style ={{marginRight : 15*wR}} name ="options-vertical" size ={26*wR} color="#B2983B" />
+            </TouchableOpacity>
             </View>
         ) }
     };

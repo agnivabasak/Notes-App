@@ -11,6 +11,7 @@ import EditScreen from './src/screens/EditScreen';
 import SplashScreen from './src/screens/SplashScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import SignupScreen from './src/screens/SignupScreen';
+import PassResetScreen from './src/screens/PassResetScreen';
 const wR = Dimensions.get("window").width/392.72727272727275; //width ratio
 const hR = Dimensions.get("window").height/776; //height ratio
 //hr and wr are used throughout the app to help with scalability/responsiveness
@@ -40,7 +41,8 @@ const AppStack = createStackNavigator(
 const AuthStack = createStackNavigator(
   {
     Login : LoginScreen,
-    Signup : SignupScreen
+    Signup : SignupScreen,
+    PassReset : PassResetScreen
   },
   {
     initialRouteName : 'Login',
