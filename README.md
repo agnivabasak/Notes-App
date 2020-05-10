@@ -20,6 +20,7 @@ Add a note | (After logging in) Click on the plus icon on top right on index/hom
 Delete a note/mutiple notes | (After logging in) Long press on a single note,and click on the others that you want to delete .After selecting the ones to delete ,click on the delete button that pops up in the bottom of the screen or click cancel
 See a note | Click on any note on Index Screen to see it
 Edit a note | First "See a note" as written above then click on the pencil/edit icon on top right to edit and remember to click on save button
+Search for a note | Click on the search bar below the header and enter any keyword that might have appeared in a note's title or content
 Logout | Click on the logout icon (a door with an arrow) on top right on the index /home screen
 ## Issues or bugs in the app?
 Contributions are always welcome . You could open up an issue if you feel like something is wrong with the app .
