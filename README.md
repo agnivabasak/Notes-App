@@ -1,5 +1,5 @@
 # Notes-App
- This is a basic Notes App created using react native and expo-cli . This project was made as a part of ISOC (IEEE Summer of Code ) . I am thankful to IEEE-VIT for giving me this opportunity and my mentor ,Sarthak Pranesh for helping me out with this project .
+ This is a basic Notes App created using react native and expo-cli . It uses firebase as RTDB ( Real Time Database) for its backend .This project was made as a part of ISOC (IEEE Summer of Code ) . I am thankful to IEEE-VIT for giving me this opportunity and my mentor ,Sarthak Pranesh for helping me out with this project,without whose help it would have been impossible to complete it .
 ## Reasons for chosing expo-cli
 - It's beginner friendly
 - No need of Android studio or XCode , You can run the app simultaneously while working on it 
