@@ -3,6 +3,7 @@ import {Text,View,StyleSheet,FlatList,Button,TouchableOpacity,Image,TextInput,St
 import {TransitionPresets} from "react-navigation-stack";
 import {Context} from '../context/BlogContext';
 import {AntDesign,Feather,SimpleLineIcons,Ionicons,FontAwesome,MaterialCommunityIcons} from '@expo/vector-icons' ;
+import firebase from "../configs/firebase";
 
 const wR = Dimensions.get("window").width/392.72727272727275; //width ratio
 const hR = Dimensions.get("window").height/776; //height ratio
@@ -96,9 +97,10 @@ IndexScreen.navigationOptions = ({navigation})=>{
             <AntDesign style ={{marginRight : 15*wR}} name ="pluscircle" size ={26*wR} color="#B2983B" />
             </TouchableOpacity>
             <TouchableOpacity activeOpacity ={0.6} onPress={()=>{
-                console.log(navigation,navigation.state)
+                firebase.auth().signOut();
+                navigation.navigate("Login");
             }}>
-                <SimpleLineIcons style ={{marginRight : 15*wR}} name ="options-vertical" size ={26*wR} color="#B2983B" />
+                <MaterialCommunityIcons style ={{marginRight : 15*wR}} name="logout" size={27*wR} color="#B2983B" />
             </TouchableOpacity>
             </View>
         ) }
