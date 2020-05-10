@@ -1,45 +1,57 @@
 import createDataContext from './createDataContext';
-
-
+import {getData,updateData} from "../utils/firebase";
 const BlogReducer = (state,action) =>{
     switch(action.type)
     {
-        case 'add_BlogPost' : return [{check : false ,title :action.payload.title,content :action.payload.content,id : state.length+1,lastModified:action.payload.lastModified},...state] ;
+        case 'add_BlogPost' :{ const state2 = [{check : false ,title :action.payload.title,content :action.payload.content,id : state.length+1,lastModified:action.payload.lastModified},...state] ;
+                                updateData(state2);                        
+                                return state2  ;}
         case 'delete_BlogPost' :
              {const state2 = state.filter((blogPost)=> blogPost.id !== action.payload) ;//maintaining the ids based on indexes even after deleeting
-                return state2.map((curval,index)=>{
+                const state3= state2.map((curval,index)=>{
                     curval.id = state2.length -index;
                     return curval;
                 })
-            }
+                updateData(state3);
+                return state3 ;
+            } 
             //making sure if a note is edited ,it becomes the first element of the array state and the id is changed accordingly
         case 'edit_BlogPost' : {
             state2 =state.filter((blogPost)=> blogPost.id !== action.payload.id);
             state3 = [action.payload,...state2];
-            return state3.map((curval,index)=>{
+            const state4 = state3.map((curval,index)=>{
                 curval.id = state3.length -index;
                 return curval;
             })
+            updateData(state4);
+            return state4;
         }
         case "delete_MultipleBlogPosts" : {
             const state2 = state.filter((blogPost)=> !blogPost.check) ;//maintaining the ids based on indexes even after deleeting
-                return state2.map((curval,index)=>{
+            const state3= state2.map((curval,index)=>{
                     curval.id = state2.length -index;
                     return curval;
                 })
+            updateData(state3);
+                return state3;
         }
         case "check_reverse" : {
-            return state.map((curval)=>{
+            const state2 = state.map((curval)=>{
                 if(curval.id===action.payload)
                     curval.check = !curval.check;
                 return curval;    
             })
+            return state2;
         }
         case "uncheck_all" : {
-            return state.map((curval)=>{
+            state2= state.map((curval)=>{
                 curval.check = false;
                 return curval;
             })
+            return state2;
+        }
+        case "set_state" :{
+            return action.payload;
         }
         default : return state ;
     }
@@ -78,5 +90,9 @@ const checkreverse = (dispatch)=>{
         dispatch({type : "check_reverse",payload :id})
     };
 };
-
-export const {Context,Provider} = createDataContext(BlogReducer,{addBlogPost,deleteBlogPost,editBlogPost,uncheckall,deleteMultipleBlogPosts,checkreverse},[]);
+const setState = (dispatch)=>{
+    return (newState)=>{
+        dispatch({type:"set_state",payload : newState})
+    }
+}
+export const {Context,Provider} = createDataContext(BlogReducer,{addBlogPost,deleteBlogPost,editBlogPost,uncheckall,deleteMultipleBlogPosts,checkreverse,setState},[]);

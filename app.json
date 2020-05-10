@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "blog",
-    "slug": "blog",
+    "name": "Notes App",
+    "slug": "Notes",
     "platforms": [
       "ios",
       "android",
@@ -9,11 +9,9 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icon2.png",
     "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#0D0D0D"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -23,6 +21,10 @@
     ],
     "ios": {
       "supportsTablet": true
+    },
+    "android" : {
+      "package": "com.agniva.notesapp",
+      "versionCode": 1
     }
   }
 }
