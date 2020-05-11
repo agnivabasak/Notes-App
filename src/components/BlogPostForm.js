@@ -52,12 +52,13 @@ const styles = StyleSheet.create({
         marginHorizontal : 10*wR,
         borderRadius :6*wR,
         flex:1,
-        paddingBottom : 10*hR
+        paddingBottom : 20*hR,
     },
     button : {
        backgroundColor : "black",
        alignSelf :"center",
        borderRadius  :10*wR,
+       marginBottom : 0,
     },
     buttontext : {
         color : "#B2983B",

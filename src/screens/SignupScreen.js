@@ -16,11 +16,15 @@ const SignupScreen = ({navigation})=>{
     const [confirmPass,setConfirmPass] = useState("");
     const [emailID,setEmailId] = useState("");
     const [warning,setWarning] = useState("");
+    const [loadScreen,setLoadScreen] = useState(false);
     return (
         <View style = {styles.screenStyle}>
-        <Overlay overlayStyle={{backgroundColor:"transparent",justifyContent:"center",alignItems:"center"}} fullScreen={true} isVisible={finalScreen} onBackdropPress={()=>{}}>
+        <Overlay overlayStyle={{backgroundColor:"transparent",justifyContent:"center",alignItems:"center",marginTop:63*hR}} fullScreen={true} isVisible={finalScreen} onBackdropPress={()=>{}}>
             <ActivityIndicator size="large" color="#B2983B"/>
             <Text style={{color:"#B2983B",fontSize:18*wR,backgroundColor:"#0D0D0D",padding:5*wR,borderRadius:9*wR,marginTop:30*hR}}>Please verify your email ID and then log in </Text>
+        </Overlay>
+        <Overlay overlayStyle={{backgroundColor:"transparent",justifyContent:"center",alignItems:"center"}} fullScreen={true} isVisible={loadScreen} onBackdropPress={()=>{}}>
+            <ActivityIndicator size="large" color="#B2983B"/>
         </Overlay>
         <Text style = {styles.headerStyle}>Create New Account</Text>
         <View style = {styles.inputStyle}>
@@ -82,8 +86,10 @@ const SignupScreen = ({navigation})=>{
                 setWarning("  The password and the confirmation password do not match !");
             }  
             else{
+                setLoadScreen(true);
                 firebase.auth().createUserWithEmailAndPassword(emailID,pass)
                 .then(()=>{
+                    setLoadScreen(false);
                     setFinalScreen(true);
                     async function completeSignUp(){
                             await firebase.auth().currentUser.sendEmailVerification().catch((error)=>console.log(error));
@@ -104,6 +110,7 @@ const SignupScreen = ({navigation})=>{
                     else {
                         setWarning("  Please make sure you are connected to the internet ! If the issue persists , please contact the owner of the app !")
                     }    
+                    setLoadScreen(false);
                 });
             }
         }}

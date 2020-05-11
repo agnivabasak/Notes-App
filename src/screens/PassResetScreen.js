@@ -8,12 +8,16 @@ const hR = Dimensions.get("window").height/776; //height ratio
 const PassResetScreen = ({navigation})=>{
     const [emailID,setEmailID]=useState("");
     const [finalScreen,setFinalScreen] = useState(false);
+    const [loadScreen,setLoadScreen] = useState(false);
     const [warning,setWarning] = useState("");
     return (
         <View style ={styles.screenStyle}>
-            <Overlay overlayStyle={{backgroundColor:"transparent",justifyContent:"center",alignItems:"center"}} fullScreen={true} isVisible={finalScreen} onBackdropPress={()=>{}}>
+            <Overlay overlayStyle={{backgroundColor:"transparent",justifyContent:"center",alignItems:"center",marginTop:88*hR}} fullScreen={true} isVisible={finalScreen} onBackdropPress={()=>{}}>
                 <ActivityIndicator size="large" color="#B2983B"/>
                 <Text style={{color:"#B2983B",fontSize:18*wR,backgroundColor:"#0D0D0D",padding:5*wR,borderRadius:9*wR,marginTop:30*hR}}>{`Password reset email has been sent !\nRedirecting to Login screen...`}</Text>
+            </Overlay>
+            <Overlay overlayStyle={{backgroundColor:"transparent",justifyContent:"center",alignItems:"center"}} fullScreen={true} isVisible={loadScreen} onBackdropPress={()=>{}}>
+                <ActivityIndicator size="large" color="#B2983B"/>
             </Overlay>
             <Text style={styles.headerStyle}>Reset Password</Text>
             <View style={styles.inputStyle}>
@@ -31,8 +35,10 @@ const PassResetScreen = ({navigation})=>{
             }
             <TouchableOpacity activeOpacity= {0.6} style = {styles.buttonStyle} onPress={()=>{
                 setWarning("");
+                setLoadScreen(true);
                 firebase.auth().sendPasswordResetEmail(emailID)
                 .then(()=>{
+                    setLoadScreen(false);
                     Keyboard.dismiss();
                     setFinalScreen(true);
                     setTimeout(function(){
@@ -51,6 +57,7 @@ const PassResetScreen = ({navigation})=>{
                     else{
                         setWarning("  Please make sure you are connected to the internet ! If the issue persists , please contact the owner of the app ! ")
                     }
+                    setLoadScreen(false);
                 })
             }}>
                 <Text style = {styles.buttonTextStyle}>SEND EMAIL</Text>

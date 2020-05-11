@@ -11,7 +11,7 @@ const SplashScreen = ({navigation})=>{
     const {setState} = useContext(Context);
     useEffect(()=>{
             async function splashJob(){
-                var user = await firebase.auth().currentUser;
+                /*var user = await firebase.auth().currentUser;
                 if(user){
                     var userState = await getData();
                     setState(userState);
@@ -21,7 +21,20 @@ const SplashScreen = ({navigation})=>{
                     setTimeout(function(){
                         navigation.navigate("Login");
                     },1500);
-                }
+                }*/
+                    firebase.auth().onAuthStateChanged(async function(user){
+                        if(user)
+                        {
+                            var userState = await getData();
+                            setState(userState);
+                            navigation.navigate("Index");
+                        }
+                        else{
+                            setTimeout(function(){
+                                navigation.navigate("Login");
+                            },1500);
+                        }
+                    })
             }
             splashJob();
         }

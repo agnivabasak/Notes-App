@@ -49,10 +49,10 @@ const LoginScreen = ({navigation})=>{
         }
         <TouchableOpacity activeOpacity= {0.6} style = {styles.buttonStyle} onPress={()=>{
             setWarning("");
+            setFinalScreen(true);
             Keyboard.dismiss();
             firebase.auth().signInWithEmailAndPassword(emailID,pass)
             .then(()=>{
-                setFinalScreen(true);
                 async function completeLogin(){
                         var emailVer = await firebase.auth().currentUser.emailVerified;
                         if(emailVer){
@@ -80,6 +80,7 @@ const LoginScreen = ({navigation})=>{
                 else {
                     setWarning("  Please make sure you are connected to the internet ! If the issue persists , contact the owner of the app!")
                 }       
+                setFinalScreen(false);
             })
             }}>
                 <Text style = {styles.buttonTextStyle}>LOGIN</Text></TouchableOpacity>
